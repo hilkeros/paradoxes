@@ -25,13 +25,15 @@ function setup() {
   // shaders require WEBGL mode to work
   // createCanvas(windowWidth, windowHeight, WEBGL);
 
-  canvasSize = 600;
+  // canvasSize = 600;
+  setSquareCanvas();
   let canvas = createCanvas(canvasSize, canvasSize, WEBGL);
   canvas.parent('canvas-holder');
   noStroke();
 }
 
 function draw() {
+  let scrollX = window.pageXOffset;
   let scrollY = window.pageYOffset;
   let y = scrollY % (canvasSize * 2);
   y = map(y, 0, canvasSize * 2, canvasSize * 2, 0);
@@ -56,6 +58,7 @@ function draw() {
     theShader.setUniform('u_tex1', images[activeImage+1]);
   }
 
+  theShader.setUniform('scroll_x', scrollX);
   theShader.setUniform('scroll_y', y);
   // rect gives us some geometry on the screen
   rect(0,0,width,height);
@@ -65,5 +68,14 @@ function draw() {
 }
 
 function windowResized(){
+  setSquareCanvas();
   resizeCanvas(windowWidth, windowHeight);
+}
+
+function setSquareCanvas(){
+  if (windowWidth > windowHeight){
+    canvasSize = windowWidth;
+  } else {
+    canvasSize = windowHeight;
+  } 
 }
