@@ -9,6 +9,10 @@ uniform vec2 u_resolution;
 uniform float scroll_x;
 uniform float scroll_y;
 
+uniform float red;
+uniform float green;
+uniform float blue;
+
 uniform sampler2D u_tex0;
 uniform sampler2D u_tex1;
 
@@ -43,6 +47,10 @@ void main(){
     coord.y -= mixValue; 
     image = texture2D(u_tex1, coord);
   }
+
+  image.r += red;
+  image.g += green;
+  image.b += blue;
 
   gl_FragColor = vec4(image);
 }

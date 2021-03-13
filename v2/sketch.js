@@ -1,11 +1,20 @@
 let theShader;
+let theSong;
 let images;
 let canvasSize;
 let selfScroll = 0;
 let selfScrollSpeed = 0.4;
 
+let playingSound = false;
+let fft;
+let color = 0;
+let sumLow = 0;
+let sumMid = 0;
+let sumHigh = 0;
+
 function preload(){
   theShader = loadShader('effect.vert', 'effect.frag');
+  theSong = loadSound('https://dl.dropboxusercontent.com/s/gp14ftdrq5nexw8/paradoxes.mp3');
   
   images = [ 
     loadImage('https://dl.dropboxusercontent.com/s/e46t8kejtmny2ia/01HROSKI_1.png'),
@@ -30,6 +39,14 @@ function setup() {
   let canvas = createCanvas(canvasSize, canvasSize, WEBGL);
   canvas.parent('canvas-holder');
   noStroke();
+  fft = new p5.FFT(0.9, 64);
+}
+
+function mouseClicked(){
+  if (playingSound == false) {
+    theSong.play();
+    playingSound = true;
+  }
 }
 
 function draw() {
@@ -66,6 +83,18 @@ function draw() {
 
   // scroll down a bit automatically
   selfScroll += selfScrollSpeed;
+
+  // adjust colors to the music;
+  setColorBySpectrum();
+  let red = color * 0.3;
+  if (red < 0){red = 0};
+  let green = red * 0.3;
+  let blue = red * 0.2;
+  theShader.setUniform('red', red);
+  theShader.setUniform('green', green);
+  theShader.setUniform('blue', blue);
+
+  // print(red, green, blue);
   
   // print out the framerate
   //  print(frameRate());
@@ -82,4 +111,32 @@ function setSquareCanvas(){
   } else {
     canvasSize = windowHeight;
   } 
+}
+
+function setColorBySpectrum(){
+  let spectrum = fft.analyze(128);
+  let third = spectrum.length / 3;
+
+  for(i = 0; i < spectrum.length; i++){
+    
+    if (i < third) {
+    sumLow = sumLow + spectrum[i];
+    } else if (i < 2 * third){
+    sumMid = sumMid + spectrum[i];
+    } else {
+    sumHigh = sumHigh + spectrum[i];
+    }
+  }
+  let averageLow = sumLow / third;
+  let averageMid = sumMid / third;
+  let averageHigh = sumHigh / third;
+  let sumBeat = averageLow + averageHigh/1.5;
+  color = map(sumBeat, 100, 400, 0, 0.8);
+  if (color > 50) {
+    color += 80;
+  }
+  // console.log(color);
+  sumLow = 0;
+  sumMid = 0;
+  sumHigh = 0;
 }
