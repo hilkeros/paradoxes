@@ -1,10 +1,10 @@
-// a shader variable
 let theShader;
 let images;
 let canvasSize;
+let selfScroll = 0;
+let selfScrollSpeed = 0.4;
 
 function preload(){
-  // load the shader
   theShader = loadShader('effect.vert', 'effect.frag');
   
   images = [ 
@@ -36,16 +36,17 @@ function draw() {
   let scrollX = window.pageXOffset;
   let scrollY = window.pageYOffset;
   let y = scrollY % (canvasSize * 2);
+  y = y + selfScroll;
   y = map(y, 0, canvasSize * 2, canvasSize * 2, 0);
+
   let activeWindowPart = Math.floor(scrollY/(canvasSize * 2));
   let activeImage = activeWindowPart % images.length;
 
-  // console.log(activeImg, activeReset);
   
   // shader() sets the active shader with our shader
   shader(theShader);
   theShader.setUniform("u_resolution", [width * 2.0, height * 2.0]);
-  // theShader.setUniform("u_time", millis() / 1000.0); // we divide millis by 1000 to convert it to seconds
+  theShader.setUniform("u_time", millis() / 1000); // we divide millis by 1000 to convert it to seconds
   // theShader.setUniform("u_mouse", [mouseX, map(mouseY, 0, height, height, 0)]); // we flip Y so it's oriented properly in our shader
 
   theShader.setUniform('u_tex0', images[activeImage]);
@@ -62,6 +63,9 @@ function draw() {
   theShader.setUniform('scroll_y', y);
   // rect gives us some geometry on the screen
   rect(0,0,width,height);
+
+  // scroll down a bit automatically
+  selfScroll += selfScrollSpeed;
   
   // print out the framerate
   //  print(frameRate());
