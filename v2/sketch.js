@@ -12,9 +12,16 @@ let sumLow = 0;
 let sumMid = 0;
 let sumHigh = 0;
 
+let songData;
+let song;
+let sceneIndex = 0;
+let loop_length = '4m';
+
 function preload(){
   theShader = loadShader('effect.vert', 'effect.frag');
   theSong = loadSound('https://dl.dropboxusercontent.com/s/gp14ftdrq5nexw8/paradoxes.mp3');
+  
+  songData = loadJSON('../json/paradoxes3.json');
   
   images = [ 
     loadImage('https://dl.dropboxusercontent.com/s/e46t8kejtmny2ia/01HROSKI_1.png'),
@@ -40,12 +47,21 @@ function setup() {
   canvas.parent('canvas-holder');
   noStroke();
   fft = new p5.FFT(0.9, 64);
+
+  Tone.Transport.bpm.value = 90;
+  song = new Song(songData);
+  console.log(song);
 }
 
 function mouseClicked(){
   if (playingSound == false) {
-    theSong.play();
+    // theSong.play();
     playingSound = true;
+    Tone.Transport.start();
+    song.startScene(0);
+  } else {
+    playingSound = false;
+    Tone.Transport.stop();
   }
 }
 
@@ -95,6 +111,11 @@ function draw() {
   theShader.setUniform('blue', blue);
 
   // print(red, green, blue);
+
+  if (playingSound) {
+    sceneIndex = round(scrollY/1000);
+    song.startScene(sceneIndex);
+  }
   
   // print out the framerate
   //  print(frameRate());
