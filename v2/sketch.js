@@ -1,16 +1,17 @@
 let theShader;
-let theSong;
+// let theSong;
 let images;
 let canvasSize;
 let selfScroll = 0;
 let selfScrollSpeed = 0.4;
 
 let playingSound = false;
-let fft;
 let color = 0;
 let sumLow = 0;
 let sumMid = 0;
 let sumHigh = 0;
+let analyser;
+let spectrum;
 
 let songData;
 let song;
@@ -19,7 +20,7 @@ let loop_length = '4m';
 
 function preload(){
   theShader = loadShader('effect.vert', 'effect.frag');
-  theSong = loadSound('https://dl.dropboxusercontent.com/s/gp14ftdrq5nexw8/paradoxes.mp3');
+  // theSong = loadSound('https://dl.dropboxusercontent.com/s/gp14ftdrq5nexw8/paradoxes.mp3');
   
   songData = loadJSON('../json/paradoxes3.json');
   
@@ -38,19 +39,16 @@ function preload(){
 }
 
 function setup() {
-  // shaders require WEBGL mode to work
-  // createCanvas(windowWidth, windowHeight, WEBGL);
-
-  // canvasSize = 600;
   setSquareCanvas();
   let canvas = createCanvas(canvasSize, canvasSize, WEBGL);
   canvas.parent('canvas-holder');
   noStroke();
-  fft = new p5.FFT(0.9, 64);
 
+  analyser = new Tone.Analyser;
+  Tone.Master.connect(analyser);
+  
   Tone.Transport.bpm.value = 90;
   song = new Song(songData);
-  console.log(song);
 }
 
 function mouseClicked(){
@@ -59,9 +57,11 @@ function mouseClicked(){
     playingSound = true;
     Tone.Transport.start();
     song.startScene(0);
+    print('started song');
   } else {
     playingSound = false;
     Tone.Transport.stop();
+    print('stopped song');
   }
 }
 
@@ -76,7 +76,6 @@ function draw() {
   let activeImage = activeWindowPart % images.length;
 
   
-  // shader() sets the active shader with our shader
   shader(theShader);
   theShader.setUniform("u_resolution", [width * 2.0, height * 2.0]);
   theShader.setUniform("u_time", millis() / 1000); // we divide millis by 1000 to convert it to seconds
@@ -101,11 +100,12 @@ function draw() {
   selfScroll += selfScrollSpeed;
 
   // adjust colors to the music;
+  spectrum = analyser.getValue();
   setColorBySpectrum();
-  let red = color * 0.3;
+  let red = color * 1.0;
   if (red < 0){red = 0};
-  let green = red * 0.3;
-  let blue = red * 0.2;
+  let green = red * 0.4;
+  let blue = red * 0.3;
   theShader.setUniform('red', red);
   theShader.setUniform('green', green);
   theShader.setUniform('blue', blue);
@@ -116,6 +116,8 @@ function draw() {
     sceneIndex = round(scrollY/1000);
     song.startScene(sceneIndex);
   }
+
+  // print(analysis);
   
   // print out the framerate
   //  print(frameRate());
@@ -135,28 +137,26 @@ function setSquareCanvas(){
 }
 
 function setColorBySpectrum(){
-  let spectrum = fft.analyze(128);
   let third = spectrum.length / 3;
 
   for(i = 0; i < spectrum.length; i++){
-    
+    let bin = spectrum[i];
+    bin = isFinite(bin) ? bin : 0;
     if (i < third) {
-    sumLow = sumLow + spectrum[i];
+    sumLow = sumLow + bin;
     } else if (i < 2 * third){
-    sumMid = sumMid + spectrum[i];
+    sumMid = sumMid + bin;
     } else {
-    sumHigh = sumHigh + spectrum[i];
+    sumHigh = sumHigh + bin;
     }
   }
-  let averageLow = sumLow / third;
-  let averageMid = sumMid / third;
-  let averageHigh = sumHigh / third;
-  let sumBeat = averageLow + averageHigh/1.5;
-  color = map(sumBeat, 100, 400, 0, 0.8);
-  if (color > 50) {
-    color += 80;
-  }
-  // console.log(color);
+
+  let averageLow = abs(sumLow / third);
+  let averageMid = abs(sumMid / third);
+  let averageHigh = abs(sumHigh / third);
+  let sumBeat = averageLow + averageHigh/3.5;
+  // print(sumBeat);
+  color = map(sumBeat, 80, 120, 0.0, 0.4);
   sumLow = 0;
   sumMid = 0;
   sumHigh = 0;
