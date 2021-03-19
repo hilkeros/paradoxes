@@ -18,6 +18,8 @@ let song;
 let sceneIndex = 0;
 let loop_length = '4m';
 
+let valueLogger;
+
 function preload(){
   theShader = loadShader('effect.vert', 'effect.frag');
   // theSong = loadSound('https://dl.dropboxusercontent.com/s/gp14ftdrq5nexw8/paradoxes.mp3');
@@ -49,6 +51,9 @@ function setup() {
   
   Tone.Transport.bpm.value = 90;
   song = new Song(songData);
+
+  valueLogger = select('#values');
+
 }
 
 function mouseClicked(){
@@ -57,11 +62,11 @@ function mouseClicked(){
     playingSound = true;
     Tone.Transport.start();
     song.startScene(0);
-    print('started song');
+    select('#song-instructions').html('starting the music... Click again to stop');
   } else {
     playingSound = false;
     Tone.Transport.stop();
-    print('stopped song');
+    select('#song-instructions').html('click again to restart the music');
   }
 }
 
@@ -99,6 +104,12 @@ function draw() {
   // scroll down a bit automatically
   selfScroll += selfScrollSpeed;
 
+  
+  if (playingSound) {
+    sceneIndex = round(scrollY/1000);
+    song.startScene(sceneIndex);
+  }
+
   // adjust colors to the music;
   spectrum = analyser.getValue();
   setColorBySpectrum();
@@ -110,12 +121,8 @@ function draw() {
   theShader.setUniform('green', green);
   theShader.setUniform('blue', blue);
 
-  // print(red, green, blue);
-
-  if (playingSound) {
-    sceneIndex = round(scrollY/1000);
-    song.startScene(sceneIndex);
-  }
+  displayValues(displayAsRGB(red, green, blue));
+  displaySceneCounter(sceneIndex);
 
   // print(analysis);
   
@@ -160,4 +167,16 @@ function setColorBySpectrum(){
   sumLow = 0;
   sumMid = 0;
   sumHigh = 0;
+}
+
+function displayValues(value){
+  valueLogger.html(value);
+}
+
+function displaySceneCounter(value){
+  select('#scene-counter').html(value)
+}
+
+function displayAsRGB(r, g, b){
+  return 'R: ' + parseInt(r * 255) + ' G: ' + parseInt(g * 255) + ' B: ' + parseInt(b * 255);
 }
