@@ -75,7 +75,12 @@ function draw() {
   let scrollY = window.pageYOffset;
   let y = scrollY % (canvasSize * 2);
   y = y + selfScroll;
-  y = map(y, 0, canvasSize * 2, canvasSize * 2, 0);
+  let shaderY = map(y, 0, canvasSize * 2, canvasSize * 2, 0);
+  // scroll down a bit automatically
+  // if((shaderY/(width * 2.0)) > -0.5){ selfScroll += selfScrollSpeed };
+  if(y < (canvasSize * 2)){ selfScroll += selfScrollSpeed };
+
+  // displaySceneCounter(`scrollY: ${scrollY} y: ${parseInt(y)} c: ${canvasSize * 2} s: ${(shaderY/(width * 2.0)).toFixed(4)}`);
 
   let activeWindowPart = Math.floor(scrollY/(canvasSize * 2));
   let activeImage = activeWindowPart % images.length;
@@ -97,12 +102,11 @@ function draw() {
   }
 
   theShader.setUniform('scroll_x', scrollX);
-  theShader.setUniform('scroll_y', y);
+  theShader.setUniform('scroll_y', shaderY);
   // rect gives us some geometry on the screen
   rect(0,0,width,height);
 
-  // scroll down a bit automatically
-  selfScroll += selfScrollSpeed;
+  
 
   
   if (playingSound) {
@@ -122,7 +126,7 @@ function draw() {
   theShader.setUniform('blue', blue);
 
   displayValues(displayAsRGB(red, green, blue));
-  displaySceneCounter(sceneIndex);
+  displaySceneCounter(`scene: ${sceneIndex}`);
 
   // print(analysis);
   
