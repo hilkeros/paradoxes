@@ -1,6 +1,5 @@
 export default [ 
     'https://dl.dropboxusercontent.com/s/e46t8kejtmny2ia/01HROSKI_1.png',
-    'https://dl.dropboxusercontent.com/s/e46t8kejtmny2ia/01HROSKI_1.png',
     'https://dl.dropboxusercontent.com/s/d8osh41xeuwewnz/01HROSKI_2.png',
     'https://dl.dropboxusercontent.com/s/2t3eco3jwwo32bp/01HROSKI_3.png',
     'https://dl.dropboxusercontent.com/s/3n1bhtpl0inbenx/01HROSKI_4.png',
