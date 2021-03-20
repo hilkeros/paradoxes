@@ -1,5 +1,6 @@
-class Song {
-    constructor(json_data) {
+export default class Song {
+    constructor(json_data, loop_length) {
+        this.loop_length = loop_length;
         this.tracks = json_data.ableton.tracks;
         this.instruments = [];
         this.scenes_switches = [];
@@ -58,13 +59,13 @@ class Song {
 
     startPart(instrument_index, part_index) {
         let part = this.instruments[instrument_index].parts[part_index]
-        part.start(loop_length);
+        part.start(this.loop_length);
         // print('instrument ' + instrument_index + ' part ' + part_index + ' started');
     }
 
     stopPart(instrument_index, part_index) {
         let part = this.instruments[instrument_index].parts[part_index]
-        part.stop(loop_length);
+        part.stop(this.loop_length);
         // print('instrument ' + instrument_index + ' part ' + part_index + ' stopped');  
     }
 
@@ -98,9 +99,8 @@ class Song {
 }
 
 
-
 function to_tone_values(events) {
-    processed = events.map(function (event) {
+    let processed = events.map(function (event) {
         return {
             time: event.time * Tone.Time('4n'),
             note: event.note, duration: event.duration * Tone.Time('4n'), velocity: event.velocity
