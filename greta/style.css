@@ -17,6 +17,11 @@ body {
     padding: 16px;
     display: flex;
     justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
 }
 
 .logo {
@@ -26,7 +31,7 @@ body {
 
 .profile {
     margin-top: -4px;
-    margin-right: 16px;
+    margin-right: 32px;
 }
 
 .profile-name {
@@ -44,6 +49,12 @@ body {
     background-color: plum;
 }
 
+.container {
+    padding-top: 64px;
+    display: flex;
+    justify-content: space-between;
+}
+
 #posts {
     padding: 16px;
     width: 60%;
@@ -54,4 +65,32 @@ body {
     background-color: white;
     padding: 16px;
     margin-bottom: 16px;
+}
+
+.text {
+    margin-top: 16px;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+#sidebar {
+    border-radius: 4px;
+    width: 30%;
+    background-color: white;
+    padding: 16px;
+}
+
+#sidebar h2 {
+    font-size: 17px;
+    color: rgb(101, 103, 107);
+}
+
+#controls button {
+    margin: 8px
+}
+
+#ads {
+    margin-top: 200px;
 }
