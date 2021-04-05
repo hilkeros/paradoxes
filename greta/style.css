@@ -10,6 +10,11 @@ body {
     color: #050505;
 }
 
+#canvas-holder canvas{
+    position: fixed;
+    top: 0;
+}
+
 .header {
     height: 32px;
     background-color: cornflowerblue;
