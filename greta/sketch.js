@@ -26,11 +26,13 @@ let videos = [];
 let songUrl = 'https://dl.dropboxusercontent.com/s/zkhoe2ujn2h0uxa/greta.mp3';
 let song;
 let musicButton;
+let heart;
 let showHearts = false;
 let system;
 
 function preload() {
     song = loadSound(songUrl);
+    heart = loadImage('./images/heart.png');
 
 }
 
@@ -46,7 +48,7 @@ function setup() {
     musicButton = createButton('Play music').parent('controls').mousePressed(toggleSong);;
     createButton('Love').parent('controls').mousePressed(toggleLove);
 
-    system = new ParticleSystem(createVector(width / 2, 50));
+    system = new ParticleSystem(createVector(width / 2, 100));
 
     song.addCue(2, toggleLove);
     song.addCue(5, toggleLove);
@@ -124,7 +126,7 @@ function createPost(text, index) {
 // A simple Particle class
 let Particle = function(position) {
     this.acceleration = createVector(0, 0.05);
-    this.velocity = createVector(random(-1, 1), random(-1, 0));
+    this.velocity = createVector(random(-5, 5), random(-5, 5));
     this.position = position.copy();
     this.lifespan = 255;
   };
@@ -138,7 +140,7 @@ let Particle = function(position) {
   Particle.prototype.update = function(){
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
-    this.lifespan -= 2;
+    this.lifespan -= 10;
   };
   
   // Method to display
@@ -146,7 +148,9 @@ let Particle = function(position) {
     stroke(127, 0, 0, this.lifespan);
     strokeWeight(2);
     // fill(127, this.lifespan);
-    ellipse(this.position.x, this.position.y, 12, 12);
+    // ellipse(this.position.x, this.position.y, 12, 12);
+    tint(255, this.lifespan);
+    image(heart, this.position.x, this.position.y, 40, 40);
   };
   
   // Is the particle still useful?
