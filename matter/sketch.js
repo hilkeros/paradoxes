@@ -37,6 +37,14 @@ function setup() {
 }
 
 function mouseClicked() {
+  showHearts();
+}
+
+function touchStarted() {
+  showHearts();
+}
+
+function showHearts() {
   for (var i = 0; i < 6; i++) {
     boxes.push(new Heart(random(width / 5) + width / 2, random(height / 5), random(20, 180)));
   }

@@ -50,6 +50,12 @@ body {
     opacity: 1;
  }
 
+ input[type=submit], input[type=button] {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
 input:focus{
     outline: none;
 }
