@@ -99,3 +99,7 @@ body {
 #ads {
     margin-top: 200px;
 }
+
+#heart {
+    display: none;
+}
