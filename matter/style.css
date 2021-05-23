@@ -3,11 +3,18 @@
     src: url(../greta/KlavikaRegular-TF.otf);
   }
 
+:root {
+    --pink: #d879fb;
+    --purple: #9179fb;
+    --blue: #4274e0;
+}
+
+
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: #F2F3F5;
-    color: #050505;
+    background: #000;
+    color: #fff;
 }
 
 #canvas-holder canvas{
@@ -17,7 +24,7 @@ body {
 
 .header {
     height: 32px;
-    background-color: cornflowerblue;
+    background-color: var(--blue);
     color: white;
     padding: 16px;
     display: flex;
@@ -51,7 +58,7 @@ body {
 }
 
 .love {
-    background-color: plum;
+    background-color: var(--pink);
 }
 
 .container {
@@ -83,13 +90,13 @@ body {
 #sidebar {
     border-radius: 4px;
     width: 30%;
-    background-color: white;
+    /* background-color: white; */
     padding: 16px;
 }
 
 #sidebar h2 {
     font-size: 17px;
-    color: rgb(101, 103, 107);
+    /* color: rgb(101, 103, 107); */
 }
 
 #controls button {
