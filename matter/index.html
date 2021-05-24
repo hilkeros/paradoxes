@@ -4,11 +4,13 @@
   <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
   <link rel="stylesheet" type="text/css" href="./style.css">
   <script language="javascript" type="text/javascript" src="../p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="../p5.sound.min.js"></script>
   <script src="./pathseg.js" type="text/javascript"></script>
   <script src="./decomp.min.js" type="text/javascript"></script>
   <script language="javascript" type="text/javascript" src="./matter.js"></script>
+  <script language="javascript" type="text/javascript" src="assets.js"></script>
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
-  <!-- <script language="javascript" type="text/javascript" src="box.js"></script> -->
+  <script language="javascript" type="text/javascript" src="heart.js"></script>
   <style> body {padding: 0; margin: 0;} </style>
 </head>
 
@@ -18,24 +20,28 @@
         <div class="logo">hatebook</div>
         <div class="profile">
           <img src="../greta/images/profilepic.png" alt="profile picture" class="profile-pic">
-          <span class="profile-name">Greta</span>
+          <span class="profile-name">greta</span>
         </div>
       </div>
       <div class="container">
-        <div id="posts"></div>
-        <div id="sidebar">
-          <div id="controls">
-            <h2>Controls</h2>
-          </div>
-          <div id="ads">
-            <h2>Sponsored</h2>
-            <p>Migros Kulturprozent</p>
-            <p>Aargauer Kuratorium</p>
-            <p>Dez Mona</p>
-            <p>Queer Ear Mastering</p>
-            <p>Irascible Music</p>
-          </div>
+        <div id="controls">
+          <div id="music" class="action">play music</div>
+          <div id="love" class="action">love</div>
+          <div id="camera" class="action">go live</div>
+          <div id="share" class="action">share</div>
         </div>
+        <div id="posts"></div>
+        <div id="ads">
+          <h2>sponsored</h2>
+          <p>migros kulturprozent</p>
+          <p>aargauer kuratorium</p>
+          <p>dez mona</p>
+          <p>queer ear mastering</p>
+          <p><a href="https://redbrickchapel.ch" target="_blank">red brick chapel</a></p>
+          <p>lea huser graphic design</p>
+          <p>photography nina-maria glahé</p>
+        </div>
+  
       </div>
     </div>
   </body>

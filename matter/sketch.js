@@ -1,18 +1,27 @@
-var path;
-var canvas;
-const { Engine, World, Bodies, Svg, Vertices } = Matter;
+let canvas;
 
-var engine;
-var world;
-var hearts = [];
-var ground;
-var heartImage, purpleHeartImage, blueHeartImage;
-var heartVertices;
+const { Engine, World, Bodies, Svg, Vertices } = Matter;
+let engine;
+let world;
+let hearts = [];
+let ground;
+let heartImage, purpleHeartImage, blueHeartImage;
+let heartVertices;
+let path;
+let logo;
+let header;
+
+let song;
+let musicButton;
+
+let videos = [];
 
 function preload() {
   heartImage = loadImage('../greta/heart.png');
   purpleHeartImage = loadImage('../greta/heartpurple.png');
   blueHeartImage = loadImage('../greta/heartblue.png');
+
+  song = loadSound(songUrl);
 }
 
 function setup() {
@@ -21,34 +30,43 @@ function setup() {
   rectMode(CENTER);
   engine = Engine.create();
   world = engine.world;
-  var options = {
+  let options = {
     isStatic: true
   };
-  ground = Bodies.rectangle(width/2, height-10, width, 20, options);
 
+  ground = Bodies.rectangle(width / 2, height - 2, width, 8, options);
   World.add(world, ground);
   path = document.getElementById('heart-path');
   heartVertices = Svg.pathToVertices(path);
   heartVertices = decomp.quickDecomp(heartVertices);
-}
 
-function touchStarted() {
-  showHearts();
-}
+  texts.map(createPost);
 
-function showHearts() {
-  for (var i = 0; i < 6; i++) {
-    hearts.push(new Heart(random(width / 2) + width / 4, random(height / 5), 200));
-  }
+  let loveButton = select('#love');
+  loveButton.mousePressed(showHearts);
+
+  musicButton = select('#music');
+  musicButton.mousePressed(toggleSong);
+
+  logo = select('.logo');
+  header = select('.header');
+
+  song.addCue(2, showHearts);
+  song.addCue(5, hideHearts);
+  song.addCue(83, showHearts);
+  song.addCue(89, hideHearts);
+  song.addCue(94, showHearts);
+  song.addCue(100, hideHearts);
+  song.onended(songEnded);
 }
 
 function draw() {
   clear();
-  Engine.update(engine, 1000/70);
+  Engine.update(engine, 1000 / 70);
 
   hearts.map((heart, index) => {
     heart.show();
-    if (heart.isDead()){
+    if (heart.isDead()) {
       heart.die();
       hearts.splice(index, 1);
     }
@@ -56,53 +74,68 @@ function draw() {
 
   noStroke();
   fill(255);
-  rect(width/2, height-20, width, 40);
+  rect(width / 2, height - 10, width, 16);
 }
 
-function Heart(x, y, w) {
-  var options = {
-    friction: 0.4,
-    restitution: 0.4
-  };
-
-  this.lifespan = 255;
-  this.w = w;
-  let scaledVertices = Vertices.scale(heartVertices, this.w/200, this.w/200);
-  this.body = Bodies.fromVertices(x, y, scaledVertices, options);
- 
-  World.add(world, this.body);
-
-  this.show = function () {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-    push();
-    translate(pos.x, pos.y);
-    rotate(angle);
-    rectMode(CENTER);
-    stroke(255);
-    imageMode(CENTER);
-    tint(255, this.lifespan);
-    image(lifespanToHeartImage(this.lifespan), 0, 0, this.w, this.w);
-    pop();
-
-    this.lifespan = this.lifespan - 80/this.lifespan;
-  };
-
-  this.isDead = function () {
-    return this.lifespan < 0;
+function showHearts() {
+  for (let i = 0; i < 6; i++) {
+    hearts.push(new Heart(random(width / 2) + width / 4, random(height / 5), 200));
   }
 
-  this.die = function () {
-    World.remove(world, this.body);
+  logo.html('lovebook');
+  header.addClass('love');
+  setTimeout(hideHearts, 4000);
+}
+
+function hideHearts(){
+  logo.html('hatebook');
+  header.removeClass('love');
+}
+
+function toggleSong() {
+  if (song.isPlaying()) {
+    song.pause();
+    videos.map(video => video.pause());
+    musicButton.html('play music');
+
+  } else {
+    song.play();
+    videos.map(sync);
+    musicButton.html('pause music');
   }
 }
 
-function lifespanToHeartImage(lifespan){
-  if (lifespan <= 100) {
-    return blueHeartImage;
-  } else if (lifespan <= 150) {
-    return purpleHeartImage;
-  }
-  return heartImage;
-
+function songEnded() {
+  musicButton.html('play music');
 }
+
+function sync(video) {
+  video.currentTime = song.currentTime();
+  video.play();
+}
+
+function createPost(text, index) {
+  const even = index % 2 === 0;
+  const userName = even ? 'hilke' : 'gregory';
+  const profilePic = even ? '../greta/images/hilke.png' : '../greta/images/gregory.png';
+  const url = even ? videoUrl : videoUrl2;
+  
+  const postWrapper = createDiv().parent('#posts').class('post');
+  const userWrapper = createDiv().parent(postWrapper).class('user-wrapper');
+  createImg(profilePic, userName).parent(userWrapper).class('profile-pic');
+  createSpan(userName).parent(userWrapper).class('user-name');
+  createDiv(text).parent(postWrapper).class('text');
+
+  let videoWrapper = createDiv().parent(postWrapper).class('video');
+  let myVideo = createVideo(url);
+  myVideo.parent(videoWrapper);
+  myVideo.volume(0);
+  videos.push(myVideo);
+  return postWrapper;
+}
+
+
+/* TO DO:
+- better syncing of videos after many pauses
+- different heart sizes
+- gradual colors */

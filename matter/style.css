@@ -1,7 +1,7 @@
 @font-face {
-    font-family: hateBook;
-    src: url(../greta/KlavikaRegular-TF.otf);
-  }
+    font-family: mint;
+    src: url(../assets/MintGroteskV1.0-Medium.woff2);
+}
 
 :root {
     --pink: #d879fb;
@@ -12,7 +12,7 @@
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: mint, Arial, Helvetica, sans-serif;
     background: #000;
     color: #fff;
 }
@@ -20,10 +20,18 @@ body {
 #canvas-holder canvas{
     position: fixed;
     top: 0;
+    z-index: 3;
 }
 
+video, img {
+    filter: grayscale();
+    z-index: 5;
+}
+
+/* header */
+
 .header {
-    height: 32px;
+    height: 40px;
     background-color: var(--blue);
     color: white;
     padding: 16px;
@@ -34,26 +42,27 @@ body {
     left: 0;
     right: 0;
     width: 100%;
+    z-index: 10;
 }
 
 .logo {
-    font-size: 1.8em;
-    font-family: hateBook;
+    font-size: 1.6em;
 }
 
 .profile {
     margin-top: -4px;
-    margin-right: 32px;
+    margin-right: 80px;
 }
 
 .profile-name {
     margin-top: -16px;
+    font-size: 1.6em;
 }
 
 .profile-pic {
-    width: 40px;
+    width: 50px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 16px;
     vertical-align: middle;
 }
 
@@ -61,50 +70,73 @@ body {
     background-color: var(--pink);
 }
 
+a, a:link, a:hover, a:visited {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* container  */
+
 .container {
     padding-top: 64px;
     display: flex;
     justify-content: space-between;
 }
 
+#controls {
+    position: fixed;
+    width: 360px;
+    padding-top: 16px;
+    z-index: 10;
+}
+
+.action {
+    font-size: 1.6em;
+    margin: 24px 16px;
+}
+
+.action:hover {
+    cursor: pointer;
+}
+
+#ads {
+    position: fixed;
+    right: 0;
+    width: 25%;
+    padding-top: 16px;
+    z-index: 10;
+}
+
 #posts {
     padding: 16px;
-    width: 60%;
+    margin-top: 24px;
+    margin-left: 360px;
 }
 
 .post {
-    border-radius: 4px;
-    background-color: white;
-    padding: 16px;
-    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #fff;
+    margin-bottom: 24px;
+    max-width: 570px;
 }
 
 .text {
     margin-top: 16px;
+    margin-left: 80px;
+    margin-right: 40px;
 }
 
-.user-name {
-    font-weight: bold;
-}
-
-#sidebar {
-    border-radius: 4px;
-    width: 30%;
-    /* background-color: white; */
+.user-wrapper {
     padding: 16px;
 }
 
-#sidebar h2 {
-    font-size: 17px;
-    /* color: rgb(101, 103, 107); */
+.user-name {
+    font-size: 1.6em;
 }
 
-#controls button {
-    margin: 8px
-}
-
-#ads {
-    margin-top: 200px;
+.post video {
+    width: 100%;
+    max-width: 570px;
 }
 
 #heart {
