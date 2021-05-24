@@ -15,6 +15,8 @@ let song;
 let musicButton;
 
 let videos = [];
+let stroboOn = false;
+let backgroundIsWhite = false;
 
 function preload() {
   heartImage = loadImage('images/heart.png');
@@ -48,20 +50,46 @@ function setup() {
   musicButton = select('#music');
   musicButton.mousePressed(toggleSong);
 
+  let stroboButton = select('#share');
+  stroboButton.mousePressed(toggleStrobo);
+
   logo = select('.logo');
   header = select('.header');
 
-  song.addCue(2, showHearts);
-  song.addCue(5, hideHearts);
-  song.addCue(83, showHearts);
-  song.addCue(89, hideHearts);
+  // song.addCue(2, showHearts);
+  // song.addCue(5, hideHearts);
+  song.addCue(83.5, showHearts);
+  song.addCue(88.8, hideHearts);
   song.addCue(94, showHearts);
-  song.addCue(100, hideHearts);
+  song.addCue(99.2, hideHearts);
+  song.addCue(104.5, toggleStrobo);
+  song.addCue(125.2, toggleStrobo);
+  song.addCue(187, showHearts);
+  song.addCue(192.2, hideHearts);
+  song.addCue(198.2, showHearts);
+  song.addCue(203.8, hideHearts);
+  song.addCue(208.5, toggleStrobo);
+  song.addCue(229.5, toggleStrobo);
+
   song.onended(songEnded);
 }
 
 function draw() {
-  clear();
+  if (stroboOn) {
+
+    if ((frameCount % 22 === 0)) {
+      toggleBackground();
+    }
+
+    if (backgroundIsWhite) {
+      background('rgba(255, 255, 255, 0.05)');
+    } else {
+      clear();
+    }
+  } else {
+    clear();
+  }
+
   Engine.update(engine, 1000 / 70);
 
   hearts.map((heart, index) => {
@@ -87,9 +115,17 @@ function showHearts() {
   setTimeout(hideHearts, 4000);
 }
 
-function hideHearts(){
+function hideHearts() {
   logo.html('hatebook');
   header.removeClass('love');
+}
+
+function toggleBackground() {
+  backgroundIsWhite = !backgroundIsWhite;
+}
+
+function toggleStrobo() {
+  stroboOn = !stroboOn;
 }
 
 function toggleSong() {
@@ -119,7 +155,7 @@ function createPost(text, index) {
   const userName = even ? 'hilke' : 'gregory';
   const profilePic = even ? 'images/hilke.png' : 'images/gregory.png';
   const url = even ? videoUrl : videoUrl2;
-  
+
   const postWrapper = createDiv().parent('#posts').class('post');
   const userWrapper = createDiv().parent(postWrapper).class('user-wrapper');
   createImg(profilePic, userName).parent(userWrapper).class('profile-pic');
