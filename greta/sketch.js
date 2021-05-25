@@ -84,7 +84,7 @@ function setup() {
 function draw() {
   if (stroboOn) {
 
-    if ((frameCount % 22 === 0)) {
+    if (frameCount % 22 === 0) {
       toggleBackground();
     }
 
@@ -110,6 +110,13 @@ function draw() {
   noStroke();
   fill(255);
   rect(width / 2, height - 10, width, 16);
+
+  if (song.isPlaying()) {
+    if (frameCount % 60 === 0) {
+      videos.map(sync);
+    }
+  }
+  
 }
 
 windowResized = function() {
@@ -120,7 +127,6 @@ function hideStartModal() {
   select('#start').hide();
   select('.header').style('display', 'flex');
   select('.container').style('display', 'flex');
-  toggleSong();
 }
 
 function showHearts() {
@@ -154,7 +160,7 @@ function toggleSong() {
 
   } else {
     song.play();
-    videos.map(sync);
+    videos.map(startVideo);
     musicButton.html('pause music');
   }
 }
@@ -163,9 +169,13 @@ function songEnded() {
   musicButton.html('play music');
 }
 
+function startVideo(video) {
+  sync(video);
+  video.play();
+}
+
 function sync(video) {
   video.currentTime = song.currentTime();
-  video.play();
 }
 
 function createPost(text, index) {
