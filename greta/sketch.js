@@ -22,11 +22,18 @@ function preload() {
   heartImage = loadImage('images/heart.png');
   purpleHeartImage = loadImage('images/heartpurple.png');
   blueHeartImage = loadImage('images/heartblue.png');
-
+  
   song = loadSound(songUrl);
 }
 
 function setup() {
+  const withCameraButton = select('#start-with-camera');
+  withCameraButton.show();
+  const withoutCameraButton = select('#start-without-camera')
+  withoutCameraButton.show();
+  withCameraButton.mousePressed(hideStartModal);
+  withoutCameraButton.mousePressed(hideStartModal);
+
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent('canvas-holder');
   rectMode(CENTER);
@@ -105,6 +112,17 @@ function draw() {
   rect(width / 2, height - 10, width, 16);
 }
 
+windowResized = function() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+function hideStartModal() {
+  select('#start').hide();
+  select('.header').style('display', 'flex');
+  select('.container').style('display', 'flex');
+  toggleSong();
+}
+
 function showHearts() {
   for (let i = 0; i < 6; i++) {
     hearts.push(new Heart(random(width / 2) + width / 4, random(height / 5), 200));
@@ -167,8 +185,10 @@ function createPost(text, index) {
   myVideo.parent(videoWrapper);
   myVideo.volume(0);
   videos.push(myVideo);
+
   return postWrapper;
 }
+
 
 
 /* TO DO:
